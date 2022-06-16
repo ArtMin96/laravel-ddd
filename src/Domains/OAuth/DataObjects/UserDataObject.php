@@ -13,8 +13,6 @@ final class UserDataObject implements UserDataObjectContract
      * @param string $lastName
      * @param string $username
      * @param string $avatar
-     * @param string $provider
-     * @param string $providerID
      * @param string $email
      * @param string $password
      */
@@ -23,8 +21,6 @@ final class UserDataObject implements UserDataObjectContract
         public readonly string $lastName,
         public readonly string $username,
         public readonly string $avatar,
-        public readonly string $provider,
-        public readonly string $providerID,
         public readonly string $email,
         public readonly string $password,
     ) {}
@@ -39,8 +35,6 @@ final class UserDataObject implements UserDataObjectContract
             'last_name' => $this->lastName,
             'username' => $this->username,
             'avatar' => $this->avatar,
-            'provider' => $this->provider,
-            'provider_id' => $this->providerID,
             'email' => $this->email,
             'password' => $this->password,
         ];

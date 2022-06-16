@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\AbstractProvider;
 
-class LoginController
+final class LoginController
 {
     public function __invoke(Request $request): RedirectResponse
     {

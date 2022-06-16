@@ -12,7 +12,7 @@ use Infrastructure\OAuth\Factories\UserFactoryContract;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\AbstractProvider;
 
-class CallbackController
+final class CallbackController
 {
     public function __invoke(
         Request $request,
@@ -38,12 +38,12 @@ class CallbackController
                     'lastName' => $lastName,
                     'username' => $user->user['login'],
                     'avatar' => $user->getAvatar(),
-                    'provider' => 'github',
-                    'providerID' => $user->getId(),
                     'email' => $user->getEmail(),
                     'password' => bcrypt('password'),
                 ]
-            )
+            ),
+            provider: 'github',
+            providerID: $user->getId()
         );
 
         return Redirect::to(path: '/');

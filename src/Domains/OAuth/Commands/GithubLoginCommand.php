@@ -10,17 +10,32 @@ class GithubLoginCommand implements GithubLoginCommandContract
 {
     /**
      * @param UserDataObjectContract $user
+     * @param string                 $provider
+     * @param string|int             $providerID
      *
      * @return void
      */
-    public function handle(UserDataObjectContract $user): void
-    {
+    public function handle(
+        UserDataObjectContract $user,
+        string $provider,
+        string|int $providerID
+    ): void {
         $user = User::query()->firstOrCreate(
             attributes: [
-                'provider' => $user->provider,
-                'provider_id' => $user->providerID,
+                'email' => $user->email,
             ],
             values: $user->toArray()
+        );
+
+        $user->oAuthIdentities()->updateOrCreate(
+            attributes: [
+                'user_id' => $user->id
+            ],
+            values: [
+                'user_id' => $user->id,
+                'provider' => $provider,
+                'provider_id' => $providerID
+            ]
         );
 
         auth()->loginUsingId($user->id);

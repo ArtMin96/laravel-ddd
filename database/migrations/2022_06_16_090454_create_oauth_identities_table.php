@@ -13,17 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('oauth_identities', function (Blueprint $table) {
             $table->snowflake()->primary();
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->string('username')->unique();
-            $table->string('avatar');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
+            $table->foreignSnowflake('user_id')->constrained()->cascadeOnDelete();
+            $table->string('provider');
+            $table->string('provider_id');
             $table->timestamps();
+
+            $table->unique(['provider', 'provider_id']);
         });
     }
 
@@ -34,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('oauth_identities');
     }
 };
