@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
 use Infrastructure\OAuth\Commands\GithubLoginCommandContract;
+use Infrastructure\OAuth\Factories\OAuthIdentityFactoryContract;
 use Infrastructure\OAuth\Factories\UserFactoryContract;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\AbstractProvider;
@@ -16,7 +17,8 @@ final class CallbackController
 {
     public function __invoke(
         Request $request,
-        UserFactoryContract $factory,
+        UserFactoryContract $userFactory,
+        OAuthIdentityFactoryContract $OAuthIdentityFactory,
         GithubLoginCommandContract $command
     ): RedirectResponse {
         /**
@@ -31,7 +33,7 @@ final class CallbackController
         list($firstName, $lastName) = explode(' ', $user->user['name']);
 
         $command->handle(
-            user: $factory->make(
+            user: $userFactory->make(
                 attributes: [
                     'id' => $user->getId(),
                     'firstName' => $firstName,
@@ -42,8 +44,12 @@ final class CallbackController
                     'password' => bcrypt('password'),
                 ]
             ),
-            provider: 'github',
-            providerID: $user->getId()
+            OAuthIdentity: $OAuthIdentityFactory->make(
+                attributes: [
+                    'provider' => 'github',
+                    'providerID' => $user->getId()
+                ]
+            )
         );
 
         return Redirect::to(path: '/');
